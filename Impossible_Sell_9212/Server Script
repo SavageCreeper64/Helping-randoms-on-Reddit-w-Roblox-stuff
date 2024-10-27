@@ -1,0 +1,76 @@
+--This script can go anywhere pretty much but I recommend somewhere near the actual seat if not under it.
+--You'll also need a RemoteEvent. I recommend this also goes under the seat.
+
+
+local seat = script.Parent --Set this to wherever the seat is
+local remoteEvent = seat.RemoteEvent --Set this to wherever the remoteEvent is
+
+local previousOccupant = nil --This is the occupant of the seat. It is the humanoid of whatever player is sitting in it.
+
+
+
+local function getPlayerFromHumanoid(humanoid) --Since the occupant of the seat yields a humanoid, a function to grab the player instead would be useful
+	local PLAYERSERVICE = game:GetService("Players") --We get the player service to later use "GetPlayerFromCharacter"
+	
+	local character = humanoid.Parent --The character / model is always the parent of the humanoid
+	
+	local player = PLAYERSERVICE:GetPlayerFromCharacter(character) --We get the player from the character using the PlayerService
+	
+	return player --Finally we return the player
+end
+
+
+
+
+
+local function occupantChanged()
+	
+	if seat.Occupant == nil then --The player has left the seat.
+		
+		if previousOccupant then --If a previous player is defined -
+			
+			local player = getPlayerFromHumanoid(previousOccupant) --We get the player
+			
+			remoteEvent:FireClient(player, false) --then we fire the remote event and ensure they unbind the action.
+			
+		end
+		
+	else --A player has sat in the seat.
+		
+		previousOccupant = seat.Occupant --To ensure we remember who was in the seat after they leave so we know who to send a remote event to disable the bound action.
+		
+		local player = getPlayerFromHumanoid(previousOccupant) --We get the player
+		
+		remoteEvent:FireClient(player, true) --We fire the remote event and request the player that they bind the action.
+		
+	end
+	
+end
+
+
+local function activateDoor(player) --(Player is a default value passed in this case)
+	
+	if previousOccupant then --Optional
+		
+		local player = getPlayerFromHumanoid(previousOccupant) --We get the player
+		
+		remoteEvent:FireClient(player, false) --We don't need the player's input anymore so we can unbind the action.
+		
+	end
+	
+	--Put your code in here for opening the door!
+	--Do note this code may run more than twice so you may have to implement some extra code to prevent this.
+	
+	--
+	
+	--
+	
+	--
+	
+	print("It worked!") --Delete me later
+end
+
+
+remoteEvent.OnServerEvent:Connect(activateDoor) --If the client fires back the remote event, we know they are requesting to activate the door. (The player pressed the correct keybind)
+
+seat:GetPropertyChangedSignal("Occupant"):Connect(occupantChanged) --This will monitor the "Occupant" property of the seat. If it changes, the occupantChanged function will fire.
