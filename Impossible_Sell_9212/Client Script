@@ -1,0 +1,51 @@
+--I recommend this script goes into StarterCharacterScripts (located under StarterPlayer)
+
+
+local CONTEXTACTIONSERVICE = game:GetService("ContextActionService")
+local remoteEvent = game.Workspace.Seat.RemoteEvent --Set this to wherever the RemoteEvent is.
+
+
+local function activateDoor(actionName, inputState, inputObject)
+	
+	if inputState == Enum.UserInputState.Begin then --We only want to fire the remote server on an input beginning and not ending
+		
+		remoteEvent:FireServer() --Triggers the ActivateDoor function on the server script
+		
+	end
+	
+end
+
+
+
+local function bindingRequest(enable)
+	
+	if enable == true then --If the given variable is true, that means we bind
+		
+		CONTEXTACTIONSERVICE:BindAction("Trigger door while seated", activateDoor, true, Enum.KeyCode.F)
+		
+		--[[ Explaining the parts of the BindAction
+		
+		1. The first input is the action name. It is important that the name is unique and remains the same across the BindAction and UnbindAction
+		2. The second input is the function to bind. This function is triggered when the bound key is pressed.
+		3. The third input is whether or not you want to create a mobile button automatically. I wouldn't really worry about it.
+		4. The fourth input is whatever button you want to bind. Keep in mind you can have multiple keys.
+		
+		
+		]]
+		
+		
+	end
+	
+	if enable == false then --If the given variable is false, that means we unbind
+		
+		CONTEXTACTIONSERVICE:UnbindAction("Trigger door while seated")
+		
+		--Ensure the name of the action is the same in order to unbind it properly
+		
+	end
+	
+end
+
+
+
+remoteEvent.OnClientEvent:Connect(bindingRequest) --On request, we either bind or unbind the action
