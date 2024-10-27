@@ -1,4 +1,9 @@
---[[
+
+What does this code do?
+- It triggers a function (meant for opening a door but really anything) when a player sits down and presses the bound keybind (f)
+
+
+
 
 In all, you will need:
 
@@ -15,4 +20,3 @@ The client script should go into StarterCharacterScripts.
 Good luck!
 
 
---]]
