@@ -1,0 +1,18 @@
+--[[
+
+In all, you will need:
+
+  - The client script (included)
+  - The server script (included)
+  - A remote event
+  - A seat
+
+
+I recommend placing the server script and remote event underneath the seat
+The client script should go into StarterCharacterScripts.
+
+
+Good luck!
+
+
+--]]
